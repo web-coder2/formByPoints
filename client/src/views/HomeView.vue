@@ -1,6 +1,11 @@
 <template>
   <div class="container mt-5">
     <h3>{{ title }}</h3>
+
+    <div class="alert alert-success mt-4 mb-4">
+      <strong>Для разделения меток</strong> использовать разделитель ;
+    </div>
+
     <button class="btn btn-success" @click="addNewRows()">Создать новую метку</button>
   </div>
 
@@ -18,12 +23,22 @@
         </thead>
         <tbody>
           <tr v-for="(item, index) in allRows">
-            <td>{{ item.name }}</td>
-            <td>{{ item.type }}</td>
-            <td>{{ item.login }}</td>
-            <td>{{ item.password }}</td>
             <td>
-              <button class="btn btn-outline-success">Удалить</button>
+              <input class="form-control" v-model="item.name">
+            </td>
+            <td>
+              <select v-model="item.type" class="form-control">
+                <option v-for="(asd) in allTypes" :value="asd">{{ asd }}</option>
+              </select>
+            </td>
+            <td>
+              <input class="form-control" :class="item.arrayErrors.includes('login') ? 'border border-danger' : '' " v-model="item.login">
+            </td>
+            <td>
+              <input :type="item.type === 'LDAP' ? 'password' : 'text'" class="form-control"  :placeholder="item.type === 'LDAP' ? '*'.repeat(item.password.length) : item.password  " v-model="item.password" :disabled="item.type === 'LDAP'">
+            </td>
+            <td>
+              <button class="btn btn-outline-success" @click="deleteSelfRow(index)">Удалить</button>
             </td>
           </tr>
         </tbody>
@@ -51,10 +66,15 @@
           rows.addNewRow()
         }
 
+        const deleteSelfRow = (index) => {
+          rows.deleteSelfRow(index)
+        }
+
         return {
           allTypes,
           allRows,
-          addNewRows
+          addNewRows,
+          deleteSelfRow
         }
 
       },

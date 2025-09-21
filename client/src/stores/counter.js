@@ -28,6 +28,16 @@ export const useRowsStore = defineStore('rows', () => {
       })
     }
 
+    function deleteSelfRow(index) {
+      rows.value.splice(index, 1)
+    }
 
-    return { rows, types, addNewRow }
+    function validateRow(item) {
+      if (item.login.length === 0 || item.login.length > 50) {
+        item.value.namesSplitArray.push('login')
+      }
+    } 
+
+
+    return { rows, types, addNewRow, deleteSelfRow }
 })

@@ -27,7 +27,7 @@
               <input class="form-control" v-model="item.name">
             </td>
             <td>
-              <select v-model="item.type" class="form-control">
+              <select v-model="item.type" class="form-control" @change="validateAndOther()">
                 <option v-for="(asd) in allTypes" :value="asd">{{ asd }}</option>
               </select>
             </td>
@@ -70,11 +70,21 @@
           rows.deleteSelfRow(index)
         }
 
+        const setterNamesByName = (index) => {
+          rows.setterNamesByName(index)
+        }
+
+
+        const validateAndOther = (index) => {
+          setterNamesByName(index)
+        }
+
         return {
           allTypes,
           allRows,
           addNewRows,
-          deleteSelfRow
+          deleteSelfRow,
+          setterNamesByName
         }
 
       },

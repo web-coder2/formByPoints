@@ -32,12 +32,12 @@ export const useRowsStore = defineStore('rows', () => {
       rows.value.splice(index, 1)
     }
 
-    function validateRow(item) {
-      if (item.login.length === 0 || item.login.length > 50) {
-        item.value.namesSplitArray.push('login')
+    function setterNamesByName(index) {
+      const nameStr = rows.value[index].name;
+      if (nameStr) {
+        rows.value[index].namesSplitArray = nameStr.split(';');
       }
-    } 
+    }
 
-
-    return { rows, types, addNewRow, deleteSelfRow }
+    return { rows, types, addNewRow, deleteSelfRow, setterNamesByName }
 })

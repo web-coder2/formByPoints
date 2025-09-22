@@ -12,8 +12,31 @@ import { defineStore } from 'pinia';
 // })
 
 export const useRowsStore = defineStore('rows', () => {
+    const localStorageKey = 'rowsData';
+
+    // функция для палучения данных из локалстораджа браузера
+    const loadFromLocalStorage = () => {
+        const savedData = localStorage.getItem(localStorageKey);
+        if (savedData) {
+            try {
+                rows.value = JSON.parse(savedData);
+            } catch (e) {
+                console.error('Ошибка парсинга localStorage', e);
+            }
+        } else {
+            rows.value = [];
+        }
+    };
+
+    // функиця для занесенися (set) даннгыз в локалсторадж
+    const saveToLocalStorage = () => {
+        localStorage.setItem(localStorageKey, JSON.stringify(rows.value));
+    };
+
     const rows = ref([]);
     const types = ['Обычный', 'LDAP'];
+
+    loadFromLocalStorage();
 
     function addNewRow() {
         rows.value.push({
@@ -25,10 +48,12 @@ export const useRowsStore = defineStore('rows', () => {
             passwordError: false,
             namesSplitArray: [],
         });
+        saveToLocalStorage(); // при любом мутирвоании данных созраняем в localStorage
     }
 
     function deleteSelfRow(index) {
         rows.value.splice(index, 1);
+        saveToLocalStorage(); // при любом мутирвоании данных созраняем в localStorage
     }
 
     function setterNamesByName(index) {
@@ -36,6 +61,7 @@ export const useRowsStore = defineStore('rows', () => {
         if (nameStr) {
             rows.value[index].namesSplitArray = nameStr.split(';');
         }
+        saveToLocalStorage(); // при любом мутирвоании данных созраняем в localStorage
     }
 
     function validateByError(index) {
@@ -52,6 +78,7 @@ export const useRowsStore = defineStore('rows', () => {
         } else {
             rows.value[index].passwordError = false;
         }
+        saveToLocalStorage(); // при любом мутирвоании данных созраняем в localStorage
     }
 
     return { rows, types, addNewRow, deleteSelfRow, setterNamesByName, validateByError };
